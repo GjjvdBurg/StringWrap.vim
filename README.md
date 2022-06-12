@@ -9,7 +9,8 @@ a = (
 )
 ```
 
-into this (select the string or stand on the line and run `:StringWrap`):
+into this (visually select the string or stand on the line and run 
+`:StringWrap`):
 ```python
 a = (
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
