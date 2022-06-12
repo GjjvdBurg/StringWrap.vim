@@ -58,10 +58,6 @@ def string_wrap(line: str, text_width: int) -> List[str]:
 def string_unwrap(lines: List[str]) -> List[str]:
     startpos, quotestr = identify_start_and_quote(lines[0])
     if quotestr is None:
-        print(
-            "[StringWrap] ERROR: couldn't identify quote character",
-            file=sys.stderr,
-        )
         return lines
 
     indent = " " * startpos
