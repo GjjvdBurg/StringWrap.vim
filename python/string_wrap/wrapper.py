@@ -77,11 +77,12 @@ def identify_start_and_quote(line) -> Tuple[Optional[int], Optional[str]]:
     except ValueError:
         pass
 
-    try:
-        startpos = line.index("'")
-        quotestr = "'"
-    except ValueError:
-        pass
+    if startpos is None:
+        try:
+            startpos = line.index("'")
+            quotestr = "'"
+        except ValueError:
+            pass
 
     if startpos is None:
         print(

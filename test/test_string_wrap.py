@@ -4,6 +4,7 @@ import unittest
 
 from string_wrap import string_wrap
 from string_wrap import string_unwrap
+from string_wrap.wrapper import identify_start_and_quote
 
 
 class StringWrapTestCase(unittest.TestCase):
@@ -46,6 +47,11 @@ class StringWrapTestCase(unittest.TestCase):
         out = string_unwrap(string_wrap(line, 60))
         self.assertEqual(out, [line])
 
+    def test_identify_1(self):
+        line = '                "ERROR: version installed from TestPyPI doesn\'t match expected version."'
+        start, quote = identify_start_and_quote(line)
+        self.assertEqual(start, 16)
+        self.assertEqual(quote, '"')
 
 
 if __name__ == "__main__":
