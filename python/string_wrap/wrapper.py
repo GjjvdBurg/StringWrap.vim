@@ -20,8 +20,8 @@ from typing import Tuple
 def wrap_text(text: str, width: int) -> List[str]:
     """Wrap text to multiple lines with specified maximum width
 
-    This function wraps text in such a way that sentences always end with a 
-    space, which I prefer to the alternative of sentences occassionally 
+    This function wraps text in such a way that sentences always end with a
+    space, which I prefer to the alternative of sentences occassionally
     starting with a space (which would happen when using textwrap.wrap).
     """
     words = text.split(" ")
@@ -93,7 +93,8 @@ def identify_start_and_quote(line) -> Tuple[Optional[int], Optional[str]]:
     preceding = set(line[:startpos])
     if not (len(preceding) == 1 and preceding.pop() == " "):
         print(
-            "[StringWrap] ERROR: String not on its own line.", file=sys.stderr
+            f"[StringWrap] ERROR: String not on its own line (preceding chars: {preceding}).",
+            file=sys.stderr,
         )
         return None, None
 
