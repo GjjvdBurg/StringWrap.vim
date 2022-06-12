@@ -24,9 +24,8 @@ class StringWrapTestCase(unittest.TestCase):
 
     def test_wrap_2(self):
         line = 'some_function("text here")'
-        expected = ['some_function("text here")']
         out = string_wrap(line, 79)
-        self.assertEqual(out, expected)
+        self.assertIsNone(out)
 
     def test_unwrap_1(self):
         lines = [

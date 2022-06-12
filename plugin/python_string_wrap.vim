@@ -25,8 +25,9 @@ text_width = int(vim.eval("&textwidth"))
 lines = string_wrap.string_wrap(line, text_width)
 
 # Insert the result
-buf[line_idx] = lines[0]
-buf.append(lines[1:], line_idx+1)
+if not lines is None:
+  buf[line_idx] = lines[0]
+  buf.append(lines[1:], line_idx+1)
 
 endpython
 endfun
@@ -56,8 +57,9 @@ lines = vim.eval('getline({},{})'.format(line_index_start, line_index_end))
 lines = string_wrap.string_unwrap(lines)
 
 # Insert the result
-del buf[line_index_start-1:line_index_end]
-buf.append(lines, line_index_start-1)
+if not lines is None:
+  del buf[line_index_start-1:line_index_end]
+  buf.append(lines, line_index_start-1)
 
 endpython
 endfun

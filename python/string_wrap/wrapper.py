@@ -41,11 +41,11 @@ def wrap_text(text: str, width: int) -> List[str]:
     return sentences
 
 
-def string_wrap(line: str, text_width: int) -> List[str]:
+def string_wrap(line: str, text_width: int) -> Optional[List[str]]:
     # Figure out which quote mark the line is using
     startpos, quotestr = identify_start_and_quote(line)
     if quotestr is None:
-        return [line]
+        return None
 
     indent = " " * startpos
     clean = line.strip().strip(quotestr)
@@ -55,10 +55,10 @@ def string_wrap(line: str, text_width: int) -> List[str]:
     return indented
 
 
-def string_unwrap(lines: List[str]) -> List[str]:
+def string_unwrap(lines: List[str]) -> Optional[List[str]]:
     startpos, quotestr = identify_start_and_quote(lines[0])
     if quotestr is None:
-        return lines
+        return None
 
     indent = " " * startpos
     clean = [l.strip().strip(quotestr) for l in lines]
