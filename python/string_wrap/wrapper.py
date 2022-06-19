@@ -69,29 +69,42 @@ def string_unwrap(lines: List[str]) -> Optional[List[str]]:
 
 
 def identify_start_and_quote(line) -> Tuple[Optional[int], Optional[str]]:
-    startpos = None
-    quotestr = None
+    double_start = None
+    single_start = None
+    quote_str = None
+
     try:
-        startpos = line.index('"')
-        quotestr = '"'
+        double_start = line.index('"')
     except ValueError:
         pass
 
-    if startpos is None:
-        try:
-            startpos = line.index("'")
-            quotestr = "'"
-        except ValueError:
-            pass
+    try:
+        single_start = line.index("'")
+    except ValueError:
+        pass
 
-    if startpos is None:
+    if double_start is None and single_start is None:
         print(
             "[StringWrap] ERROR: couldn't identify quote character.",
             file=sys.stderr,
         )
         return None, None
+    elif single_start is None:
+        start_pos = double_start
+        quote_str = '"'
+    elif double_start is None:
+        start_pos = single_start
+        quote_str = "'"
+    else:
+        start_pos = (
+            double_start if double_start < single_start else single_start
+        )
+        quote_str = '"' if double_start < single_start else "'"
 
-    preceding = set(line[:startpos])
+    if start_pos == 0:
+        return start_pos, quote_str
+
+    preceding = set(line[:start_pos])
     if not (len(preceding) == 1 and preceding.pop() == " "):
         print(
             f"[StringWrap] ERROR: String not on its own line (preceding chars: {preceding}).",
@@ -99,4 +112,4 @@ def identify_start_and_quote(line) -> Tuple[Optional[int], Optional[str]]:
         )
         return None, None
 
-    return startpos, quotestr
+    return start_pos, quote_str

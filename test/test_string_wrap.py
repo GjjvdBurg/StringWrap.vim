@@ -42,6 +42,19 @@ class StringWrapTestCase(unittest.TestCase):
         out = string_unwrap(lines)
         self.assertEqual(out, expected)
 
+    def test_unwrap_2(self):
+        lines = [
+            '\'{\n\t"test_statistic": 7.001209,\n\t"degrees_of_freedom": 9,\n\t\'',
+            '\'"p_value": 6.316304505558843e-05,\n\t"reject_H0_at_0.05: true,\n\t\'',
+            '\'"mean_difference": 0.5425054110364441,\n\t"std_difference": \'',
+            "'0.23246217185411072,\n\t\"count\": 10}'",
+        ]
+        expected = [
+            '\'{\n\t"test_statistic": 7.001209,\n\t"degrees_of_freedom": 9,\n\t"p_value": 6.316304505558843e-05,\n\t"reject_H0_at_0.05: true,\n\t"mean_difference": 0.5425054110364441,\n\t"std_difference": 0.23246217185411072,\n\t"count": 10}\'',
+        ]
+        out = string_unwrap(lines)
+        self.assertEqual(out, expected)
+
     def test_round_trip(self):
         line = '        "The default behavior with multiple input columns is to plot each column as a separate line, and use a horizontal axis of sequential integer values. With this option, the user can specify that the first column in the input data stream should be used as the horizontal axis."'
         out = string_unwrap(string_wrap(line, 60))
