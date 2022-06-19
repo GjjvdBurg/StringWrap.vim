@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import contextlib
+import io
 import unittest
 
 from string_wrap import string_wrap
@@ -25,8 +27,13 @@ class StringWrapTestCase(unittest.TestCase):
 
     def test_wrap_2(self):
         line = 'some_function("text here")'
-        out = string_wrap(line, 79)
+        buf = io.StringIO()
+        with contextlib.redirect_stderr(buf):
+            out = string_wrap(line, 79)
         self.assertIsNone(out)
+        self.assertEqual(
+            buf.getvalue().rstrip('\n'), "[StringWrap] ERROR: String not on its own line."
+        )
 
     def test_unwrap_1(self):
         lines = [

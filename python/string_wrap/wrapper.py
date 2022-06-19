@@ -107,7 +107,7 @@ def identify_start_and_quote(line) -> Tuple[Optional[int], Optional[str]]:
     preceding = set(line[:start_pos])
     if not (len(preceding) == 1 and preceding.pop() == " "):
         print(
-            f"[StringWrap] ERROR: String not on its own line (preceding chars: {preceding}).",
+            "[StringWrap] ERROR: String not on its own line.",
             file=sys.stderr,
         )
         return None, None
