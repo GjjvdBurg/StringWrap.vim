@@ -84,6 +84,7 @@ buf = vim.current.buffer
 (line_index_start, col_start) = buf.mark('<')
 (line_index_end, col_end) = buf.mark('>')
 lines = vim.eval('getline({},{})'.format(line_index_start, line_index_end))
+text_width = int(vim.eval("&textwidth"))
 
 # Rewrap the lines
 lines = string_wrap.string_rewrap(lines, text_width)
