@@ -68,6 +68,15 @@ def string_unwrap(lines: List[str]) -> Optional[List[str]]:
     return [indented]
 
 
+def string_rewrap(lines: List[str], text_width: int) -> Optional[List[str]]:
+    unwrapped = string_unwrap(lines)
+    if unwrapped is None:
+        return None
+
+    theline = unwrapped[0]
+    return string_wrap(theline, text_width)
+
+
 def identify_start_and_quote(line) -> Tuple[Optional[int], Optional[str]]:
     double_start = None
     single_start = None
