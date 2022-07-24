@@ -86,7 +86,7 @@ buf = vim.current.buffer
 lines = vim.eval('getline({},{})'.format(line_index_start, line_index_end))
 
 # Rewrap the lines
-lines = string_wrap.string_rewrap(lines)
+lines = string_wrap.string_rewrap(lines, text_width)
 
 # Insert the result
 if not lines is None:
