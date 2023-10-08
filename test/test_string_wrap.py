@@ -76,6 +76,16 @@ class StringWrapTestCase(unittest.TestCase):
         out = string_unwrap(lines)
         self.assertEqual(out, expected)
 
+    def test_unwrap_4(self):
+        lines = [
+            '                        "Value received in __call__ is not of type str, this "',
+            '                        f"is unexpected: {values}"',
+        ]
+        expected = [
+            '                        f"Value received in __call__ is not of type str, this is unexpected: {values}"',
+        ]
+        self.assertSequenceEqual(string_unwrap(lines), expected)
+
     def test_round_trip_1(self):
         line = '        "The default behavior with multiple input columns is to plot each column as a separate line, and use a horizontal axis of sequential integer values. With this option, the user can specify that the first column in the input data stream should be used as the horizontal axis."'
         out = string_unwrap(string_wrap(line, 60))
@@ -143,6 +153,14 @@ class StringWrapTestCase(unittest.TestCase):
         out = string_wrap(line, 79)
         self.assertSequenceEqual(out, expected)
 
+    def test_fstrings_7(self):
+        line = "                    f\"Foobar ID '{record.foobar_id}' occurs more than once in file {filename}\""
+        expected = [
+            "                    f\"Foobar ID '{record.foobar_id}' occurs more than once in \"",
+            '                    f"file {filename}"',
+        ]
+        self.assertSequenceEqual(string_wrap(line, 79), expected)
+
     def test_trailing_comma_1(self):
         expected = [
             '    f"Lorem ipsum dolor sit amet {consectetur} adipiscing elit sed doo eiusmo "',
@@ -153,13 +171,19 @@ class StringWrapTestCase(unittest.TestCase):
         self.assertSequenceEqual(out, expected)
 
     def test_trailing_comma_2(self):
-        # TODO: Add a roundtrip test with a trailing comma to ensure it stays
         expected = [
             '    f"Lorem ipsum dolor sit amet {consectetur} adipiscing elit sed doo eiusmo "',
             '    "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim foo ",',
         ]
         out = string_rewrap(expected, 79)
         self.assertSequenceEqual(out, expected)
+
+    def test_rewrap_1(self):
+        lines = [
+            '                        "Value received in __call__ is not of type str, this "',
+            '                        f"is unexpected: {values}"',
+        ]
+        self.assertSequenceEqual(string_rewrap(lines, 79), lines)
 
 
 if __name__ == "__main__":

@@ -56,6 +56,7 @@ class InputInfo:
     quote_str: str
     is_fstring: bool
     trailing_comma: bool
+    indent_len: int
 
 
 def tokenize(source: str) -> List[Token]:
@@ -66,8 +67,8 @@ def tokenize(source: str) -> List[Token]:
         raise TokenizeError(source, "no body")
 
     expr = body[0]
-    if not hasattr(expr, 'value'):
-        raise TokenizeError(source, 'no value')
+    if not hasattr(expr, "value"):
+        raise TokenizeError(source, "no value")
     value = expr.value
     if isinstance(value, ast.JoinedStr):
         string_parts = value.values
@@ -223,9 +224,7 @@ def string_wrap(line: str, text_width: int) -> Optional[List[str]]:
     if info is None or info.quote_str is None:
         return None
 
-    indent = (
-        " " * (info.start_pos - 1) if info.is_fstring else " " * info.start_pos
-    )
+    indent = " " * info.indent_len
 
     source = line.rstrip(",").strip()
     tmp_source, table = translate_source(source)
@@ -253,9 +252,8 @@ def string_unwrap(lines: List[str]) -> Optional[List[str]]:
     if info is None or info.quote_str is None:
         return None
 
-    indent = (
-        " " * (info.start_pos - 1) if info.is_fstring else " " * info.start_pos
-    )
+    indent = " " * info.indent_len
+
     clean = [
         line.strip().lstrip("f").rstrip(",").strip(info.quote_str)
         for line in lines
@@ -326,28 +324,40 @@ def identify_start_and_quote(lines: List[str]) -> Optional[InputInfo]:
             quote_str=quote_str,
             is_fstring=False,
             trailing_comma=trailing_comma,
+            indent_len=0,
         )
 
+    # We get the indent length from the first line. If the first-line is an
+    # f-string, the indent_len is one fewer than the position of the first
+    # quote character, otherwise it is equal to that position.
     preceding = set(first_line[:start_pos])
     if preceding == set([" "]):
-        return InputInfo(
+        info = InputInfo(
             lines=lines,
             start_pos=start_pos,
             quote_str=quote_str,
             is_fstring=False,
             trailing_comma=trailing_comma,
+            indent_len=start_pos,
         )
-    if preceding == set([" ", "f"]):
-        return InputInfo(
+    elif preceding == set([" ", "f"]):
+        info = InputInfo(
             lines=lines,
             start_pos=start_pos,
             quote_str=quote_str,
             is_fstring=True,
             trailing_comma=trailing_comma,
+            indent_len=start_pos - 1,
         )
-    print(
-        "[StringWrap] ERROR: String not on its own line. "
-        f"Preceding: {first_line[:start_pos]}",
-        file=sys.stderr,
-    )
-    return None
+    else:
+        print(
+            "[StringWrap] ERROR: String not on its own line. "
+            f"Preceding: {first_line[:start_pos]}",
+            file=sys.stderr,
+        )
+        return None
+
+    for line in lines:
+        if line.lstrip().startswith("f"):
+            info.is_fstring = True
+    return info
