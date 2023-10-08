@@ -185,6 +185,17 @@ class StringWrapTestCase(unittest.TestCase):
         ]
         self.assertSequenceEqual(string_rewrap(lines, 79), lines)
 
+    def test_rewrap_2(self):
+        lines = [
+            '                        f"Can\'t disambiguate {values} to {self._enum.__name__} "',
+            '                        "member"',
+        ]
+        expected = [
+            '                        f"Can\'t disambiguate {values} to "',
+            '                        f"{self._enum.__name__} member"',
+        ]
+        self.assertSequenceEqual(string_rewrap(lines, 79), expected)
+
 
 if __name__ == "__main__":
     unittest.main()

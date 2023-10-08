@@ -88,6 +88,11 @@ def tokenize(source: str) -> List[Token]:
                 last_trailing = False
 
             for word in words[:-1]:
+                # Attach space to last format token if possible, to avoid 
+                # moving the space to the next sentence
+                if not word and tokens[-1].kind == Kind.FORMAT:
+                    tokens[-1].trailing_space = True
+                    continue
                 token = Token(Kind.REGULAR, word, trailing_space=True)
                 tokens.append(token)
 
