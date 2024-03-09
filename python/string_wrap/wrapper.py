@@ -21,6 +21,11 @@ from typing import List
 from typing import Optional
 from typing import Tuple
 
+if sys.version_info >= (3, 9):
+    from ast import unparse as ast_unparse
+else:
+    from .ast_backports import unparse as ast_unparse
+
 
 class UnsupportASTLiteralError(ValueError):
     pass
@@ -101,7 +106,7 @@ def tokenize(source: str) -> List[Token]:
             )
         else:
             tokens.append(
-                Token(Kind.FORMAT, ast.unparse(part), trailing_space=False)
+                Token(Kind.FORMAT, ast_unparse(part), trailing_space=False)
             )
     return tokens
 
