@@ -93,9 +93,9 @@ def tokenize(source: str) -> List[Token]:
                 last_trailing = False
 
             for word in words[:-1]:
-                # Attach space to last format token if possible, to avoid 
+                # Attach space to last format token if possible, to avoid
                 # moving the space to the next sentence
-                if not word and tokens[-1].kind == Kind.FORMAT:
+                if not word and tokens[-1].kind is Kind.FORMAT:
                     tokens[-1].trailing_space = True
                     continue
                 token = Token(Kind.REGULAR, word, trailing_space=True)
@@ -124,7 +124,7 @@ def make_sentences(source: str, width: int) -> Tuple[List[str], List[Kind]]:
         # f-string.
         max_width = (
             width - 1
-            if (token.kind == Kind.FORMAT or sentence_kind == Kind.FORMAT)
+            if (token.kind is Kind.FORMAT or sentence_kind is Kind.FORMAT)
             else width
         )
         combined_token = token.value + " " * token.trailing_space
@@ -140,7 +140,7 @@ def make_sentences(source: str, width: int) -> Tuple[List[str], List[Kind]]:
 
         sentence += combined_token
         sentence_kind = (
-            Kind.FORMAT if token.kind == Kind.FORMAT else sentence_kind
+            Kind.FORMAT if token.kind is Kind.FORMAT else sentence_kind
         )
 
     # Don't forget to store the last sentence info
@@ -166,7 +166,7 @@ def wrap_text(
 
     clean_sentences = untranslate_source(sentences, table)
 
-    f_indices = [i for i, k in enumerate(sentence_kinds) if k == Kind.FORMAT]
+    f_indices = [i for i, k in enumerate(sentence_kinds) if k is Kind.FORMAT]
 
     return clean_sentences, f_indices
 
